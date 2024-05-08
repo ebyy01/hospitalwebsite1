@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hopital - gestion patients et maintenance des services d'un hopital">
+    <meta name="author" content="GL2 Team">
+    <meta name="keyword" content="Initiative, Hopital, moderne, clinic, patient, admin, tout domaine sanétaire">
+
+    <title>Projet web GL2</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+    <!-- external css -->
+    <!-- font icon -->
+    <link href="css/elegant-icons-style.css" rel="stylesheet" type="text/css" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Custom styles -->
+    <link href="css/depart_style.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet" />
+
+
+</head>
+
+<body>
+<?php
+// connexion_patient.php
+
+// Vérifiez si le formulaire a été soumis
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Configuration de la base de données
+    $hostname = "localhost";
+    $username = "root";
+    $password = ""; // Assurez-vous de remplacer cela par votre mot de passe de base de données
+    $database = "hopital";
+
+    // Connexion à la base de données
+    $conn = new mysqli($hostname, $username, $password, $database);
+
+    // Vérification de la connexion
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Récupérer les données du formulaire
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+
+    // Requête SQL pour vérifier les informations d'identification
+    $query = "SELECT * FROM patient WHERE email='$email' AND password='$password'";
+    $result = $conn->query($query);
+
+    // Vérification du résultat de la requête
+    if ($result->num_rows > 0) {
+        // Authentification réussie
+        // Démarrer la session et enregistrer l'email
+        session_start();
+        $_SESSION['email'] = $email;
+
+        // Rediriger vers la page d'accueil du patient
+        header("Location: connectpat.html");
+        exit(); // Assurez-vous de terminer l'exécution du script après la redirection
+    } else {
+        // Authentification échouée
+        echo "Login failed. Invalid username or password.";
+    }
+
+    // Fermeture de la connexion à la base de données
+    $conn->close();
+}
+?>
+
+
+
+
+    <!-- container section start -->
+    <section id="container" class="">
+
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+                <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
+
+            <!--logo start-->
+            <a href="index.html" class="logo">TEK <span class="lite">CARE</span></a>
+            <!--logo end-->
+
+            <div class="nav search-row" id="top_menu">
+                <!--  search form start -->
+                <ul class="nav top-menu">
+                    <li>
+                        <form class="navbar-form">
+                            <input class="form-control" placeholder="Search" type="text">
+                        </form>
+                    </li>
+                </ul>
+                <!--  search form end -->
+            </div>
+
+            <div class="top-nav notification-row">
+                <!-- notification dropdown start -->
+            </div>
+            <!-- notification dropdown end -->
+        </header>
+        <!-- header end -->
+
+        <aside>
+            <div id="sidebar" class="nav-collapse ">
+                <!-- sidebar menu start -->
+                <ul class="sidebar-menu">
+                    <li class="active">
+                        <a class="" href="index.html">
+                            <i class="icon_house_alt"></i>
+                            <span>Accueil</span>
+                        </a>
+                    </li>
+
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="icon_document_alt"></i>
+                            <span>Administrateur</span>
+                            <span class="menu-arrow arrow_carrot-right"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="patient_enre.html">Enregistrer patient</a></li>
+                            <li><a class="" href="form_medecin.html">Enregistrer médecin</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="icon_desktop"></i>
+                            <span>Services</span>
+                            <span class="menu-arrow arrow_carrot-right"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="service.html">Service 1</a></li>
+                            <li><a class="" href="buttons.html">Service 2</a></li>
+
+                        </ul>
+                    </li>
+
+
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="icon_table"></i>
+                            <span>Se connecter</span>
+                            <span class="menu-arrow arrow_carrot-right"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="patient_login.php">Patient login</a></li>
+                            <li><a class="" href="medecin_table.html">Medecin login</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <!-- sidebar menu end -->
+            </div>
+        </aside>
+        <!-- sidebar end -->
+
+        <!-- main content start -->
+        <section id="main-content">
+            <section class="wrapper">
+
+                <!-- Login Form with Image -->
+                <div class="login-form">
+                    <div class="text-center mb-4">
+                        <img src="imgs/image.png" alt="Logo" class="follow-ava" style="width: 100px; height: 100px;">
+                    </div>
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+    <h2 class="text-center">Login</h2>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Login</button>
+</form>
+
+
+
+                </div>
+                <!-- End Login Form with Image -->
+
+            </section>
+        </section>
+        <!-- main content end -->
+
+    </section>
+    <!-- container section end -->
+
+    <!-- javascripts -->
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <!-- bootstrap -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="js/jquery.scrollTo.min.js"></script>
+    <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="js/jquery-ui.js"></script>
+    <!-- custom script for this page-->
+    <script src="js/scripts.js"></script>
+
+</body>
+
+</html>
